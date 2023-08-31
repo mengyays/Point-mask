@@ -23,7 +23,7 @@ def scatter(x, colors):
     # We create a scatter plot.
     f = plt.figure(figsize=(8, 8))
     ax = plt.subplot(aspect='equal')
-    sc = ax.scatter(x[:, 0], x[:, 1], lw=2, s=20, marker='x', c=palette[colors.astype(np.int)])
+    sc = ax.scatter(x[:, 0], x[:, 1], lw=2, s=20, marker='x', c=palette[colors.astype(np.int32)])
     plt.xlim(-25, 25)
     plt.ylim(-25, 25)
     ax.axis('off')

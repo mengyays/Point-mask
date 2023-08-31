@@ -23,7 +23,7 @@ def load_data_h5py_scannet10(partition, dataroot):
     Return:
         data,label arrays
     """
-    DATA_DIR = dataroot + '/PointDA_data/scannet_norm_curv'
+    DATA_DIR = dataroot + '/PointDA_data/scannet_norm_curv_angle'
     all_data = []
     all_label = []
     for h5_name in sorted(glob.glob(os.path.join(DATA_DIR, '%s_*.h5' % partition))):
@@ -33,8 +33,8 @@ def load_data_h5py_scannet10(partition, dataroot):
         f.close()
         all_data.append(data)
         all_label.append(label)
-    all_data = np.concatenate(all_data, axis=0)
-    all_label = np.concatenate(all_label, axis=0)
+    all_data = np.concatenate((all_data), axis=0)
+    all_label = np.concatenate((all_label), axis=0)
     return np.array(all_data).astype('float32'), np.array(all_label).astype('int64')
 
 
@@ -52,9 +52,9 @@ class ScanNet(Dataset):
 
         # split train to train part and validation part
         if partition == "train":
-            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int)
+            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int32)
             np.random.shuffle(self.train_ind)
-            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int)
+            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int32)
             np.random.shuffle(self.val_ind)
 
         io.cprint("number of " + partition + " examples in scannet" + ": " + str(self.data.shape[0]))
@@ -63,7 +63,7 @@ class ScanNet(Dataset):
 
     def __getitem__(self, item):
         pointcloud = np.copy(self.data[item])[:, :3]
-        norm_curv = np.copy(self.data[item])[:, 3:].astype(np.float32)
+        norm_curv = np.copy(self.data[item])[:, 3:7].astype(np.float32)
         label = np.copy(self.label[item])
         pointcloud = scale_to_unit_cube(pointcloud)
         # Rotate ScanNet by -90 degrees
@@ -115,9 +115,9 @@ class ModelNet(Dataset):
 
         # split train to train part and validation part
         if partition == "train":
-            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int)
+            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int32)
             np.random.shuffle(self.train_ind)
-            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int)
+            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int32)
             np.random.shuffle(self.val_ind)
 
         io.cprint("number of " + partition + " examples in modelnet : " + str(len(self.pc_list)))
@@ -158,7 +158,7 @@ class ShapeNet(Dataset):
         self.random_rotation = random_rotation
         self.pc_list = []
         self.lbl_list = []
-        DATA_DIR = os.path.join(dataroot, "PointDA_data", "shapenet_norm_curv")
+        DATA_DIR = os.path.join(dataroot, "PointDA_data", "shapenet_norm_curv_angle")
 
         npy_list = sorted(glob.glob(os.path.join(DATA_DIR, '*', partition, '*.npy')))
 
@@ -171,9 +171,9 @@ class ShapeNet(Dataset):
 
         # split train to train part and validation part
         if partition == "train":
-            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int)
+            self.train_ind = np.asarray([i for i in range(self.num_examples) if i % 10 < 8]).astype(np.int32)
             np.random.shuffle(self.train_ind)
-            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int)
+            self.val_ind = np.asarray([i for i in range(self.num_examples) if i % 10 >= 8]).astype(np.int32)
             np.random.shuffle(self.val_ind)
 
         io.cprint("number of " + partition + " examples in shapenet: " + str(len(self.pc_list)))

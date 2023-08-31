@@ -69,7 +69,7 @@ if __name__ == '__main__':
     root = "./PointDA_data/scannet/"
     save_root = "./PointDA_data/scannet_norm_curv_angle/"
     fileName = ['train_0.h5', 'train_1.h5', 'train_2.h5']
-    # fileName = ['test_0.h5']
+    #fileName = ['test_0.h5']
     for f in fileName:
         print(f)
         PC = []
